@@ -79,9 +79,24 @@ app.delete('/api/news/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
+/* ── ping (keepalive для Render) ── */
+app.get('/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
+
 /* ── fallback ── */
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`🚀 http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 http://localhost:${PORT}`);
+
+  /* self-ping каждые 10 минут — не даёт Render засыпать */
+  const SITE_URL = process.env.SITE_URL;
+  if (SITE_URL) {
+    setInterval(() => {
+      fetch(`${SITE_URL}/ping`)
+        .then(() => console.log('🏓 ping ok'))
+        .catch(e => console.warn('⚠️ ping fail:', e.message));
+    }, 10 * 60 * 1000); // каждые 10 минут
+  }
+});
