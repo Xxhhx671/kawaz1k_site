@@ -29,7 +29,7 @@
   const resize = () => {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
-    const count = Math.min(120, Math.floor((W * H) / 14000));
+    const count = Math.min(50, Math.floor((W * H) / 28000));
     parts = Array.from({ length: count }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
@@ -61,12 +61,12 @@
         const q = parts[j];
         const dx = p.x - q.x, dy = p.y - q.y;
         const d2 = dx * dx + dy * dy;
-        if (d2 < 13000) {
+        if (d2 < 7000) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(q.x, q.y);
-          ctx.strokeStyle = `rgba(255,255,255,${(1 - d2 / 13000) * 0.16})`;
-          ctx.lineWidth = 0.7;
+          ctx.strokeStyle = `rgba(255,255,255,${(1 - d2 / 7000) * 0.13})`;
+          ctx.lineWidth = 0.6;
           ctx.stroke();
         }
       }
@@ -343,7 +343,12 @@
   let pointerX = 0, pointerY = 0;
 
   window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+  let pxTick = 0;
   window.addEventListener('mousemove', e => {
+    // обновляем не чаще чем раз в 32мс (~30fps) — снижает нагрузку
+    const now = Date.now();
+    if (now - pxTick < 32) return;
+    pxTick = now;
     pointerX = e.clientX / window.innerWidth - 0.5;
     pointerY = e.clientY / window.innerHeight - 0.5;
   }, { passive: true });
@@ -381,7 +386,7 @@
   --------------------------------------------------------- */
   window.addEventListener('click', e => {
     if (prefersReduced) return;
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 8; i++) {
       const s = document.createElement('span');
       s.style.cssText = `
         position:fixed; left:${e.clientX}px; top:${e.clientY}px;
@@ -408,7 +413,7 @@
   const title = document.querySelector('.hero__title');
   if (title && !prefersReduced) {
     setInterval(() => {
-      if (Math.random() > 0.55) {
+      if (Math.random() > 0.75) {
         title.style.animation = 'none';
         title.offsetHeight; // reflow
         title.style.textShadow = '4px 0 #fff, -4px 0 #555';
