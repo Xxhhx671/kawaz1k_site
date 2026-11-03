@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kawaz1k.win — мощный скрипт для Roblox</title>
+  <meta name="description" content="kawaz1k.win — быстрый, стабильный и бесплатный скрипт-хаб для Roblox.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/extra.css">
+  <link rel="stylesheet" href="/css/cabinet.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23000'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='%2300ff85' font-family='Arial' font-weight='bold'>K</text></svg>">
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="grid-bg"></div>
+
+  <!-- ===== NAV ===== -->
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <div class="logo-group">
+        <a href="#" class="logo">
+          <span class="logo__mark">K</span>
+          <span class="logo__text">kawaz1k<span class="accent">.win</span></span>
+        </a>
+        <button class="icon-btn" id="newsBtn" data-open="modalNews" aria-label="Новости" title="Новости">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3.5 6A1.5 1.5 0 0 1 5 4.5h11A1.5 1.5 0 0 1 17.5 6v12a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 18V6Z"/>
+            <path d="M6.5 8h8"/><path d="M6.5 11.5h8"/><path d="M6.5 15h5"/>
+            <path d="M17.5 8H19a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-3 0V8.5"/>
+          </svg>
+          <span class="icon-btn__dot"></span>
+        </button>
+      </div>
+
+      <nav class="nav__links" id="navLinks">
+        <a href="#features">Возможности</a>
+        <a href="#howto">Инструкция</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <!-- desktop right controls -->
+      <div class="nav__right-group" id="navRightGroup">
+        <button class="btn btn--ghost btn--sm complaint-btn" id="complaintBtn" data-open="modalComplaint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3.5 21.5 20h-19L12 3.5Z"/>
+            <path d="M12 10v4.2"/>
+            <path d="M12 17.2h.01"/>
+          </svg>
+          <span>Жалоба</span>
+        </button>
+
+        <!-- auth buttons (logged out) -->
+        <div class="nav__auth" id="navAuth">
+          <button class="btn btn--ghost btn--sm" id="openLoginBtn">Войти</button>
+          <button class="btn btn--primary btn--sm" id="openRegBtn">Регистрация</button>
+        </div>
+
+        <!-- profile (logged in) -->
+        <div class="nav__profile" id="navProfile" hidden>
+          <div class="nav__balance" id="navBalance">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span id="navBalanceNum">0</span> ₽
+          </div>
+          <button class="nav__avatar-btn" id="navAvatarBtn" title="Профиль">
+            <img class="nav__avatar" id="navAvatar" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='20' fill='%23111'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='%2300ff85' font-family='Arial'>?</text></svg>" alt="avatar">
+            <span class="nav__nick" id="navNick">User</span>
+          </button>
+        </div>
+
+        <button class="btn btn--sm nav__cta" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"))()'>
+          <span class="btn-copy__idle">Копировать скрипт</span>
+          <span class="btn-copy__done">Скопировано</span>
+        </button>
+      </div>
+
+      <!-- поиск + бургер (кабинет внутри) -->
+      <div class="nav__tools">
+        <button class="nav-tool" id="searchBtn" type="button" aria-label="Поиск игроков" title="Поиск игроков">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.8-3.8"/></svg>
+        </button>
+        <button class="burger" id="burger" type="button" aria-label="Меню и личный кабинет" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== DRAWER: КАБИНЕТ + МЕНЮ (бургер) ===== -->
+  <div class="mob-drawer" id="mobDrawer" aria-hidden="true">
+    <div class="mob-drawer__back" id="mobDrawerBack"></div>
+    <div class="mob-drawer__panel" role="dialog" aria-label="Меню и личный кабинет">
+      <button class="mob-drawer__close" id="mobDrawerClose" type="button" aria-label="Закрыть меню">&times;</button>
+      <div class="mob-drawer__tabs" id="mobTabs">
+        <button class="mob-tab is-active" data-tab="cabinet">Кабинет</button>
+        <button class="mob-tab" data-tab="menu">Меню</button>
+        <button class="mob-tab" data-tab="scripts">Скрипты</button>
+        <button class="mob-tab" data-tab="coder">Кодер <span class="mob-tab__badge">Beta</span></button>
+      </div>
+
+      <div class="mob-drawer__content">
+        <!-- ЛИЧНЫЙ КАБИНЕТ -->
+        <div class="mob-tab-panel is-active" data-panel="cabinet">
+          <!-- не вошёл -->
+          <div class="cab-guest" id="cabGuest">
+            <div class="cab-guest__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1-4 4-6 7.5-6s6.5 2 7.5 6"/></svg>
+            </div>
+            <h4>Личный кабинет</h4>
+            <p>Войди, чтобы настроить профиль: аватар, баннер, ник и описание.</p>
+            <div class="cab-guest__btns">
+              <button class="btn btn--ghost btn--sm" id="mobLoginBtn" type="button">Войти</button>
+              <button class="btn btn--primary btn--sm" id="mobRegBtn" type="button">Регистрация</button>
+            </div>
+          </div>
+
+          <!-- вошёл -->
+          <div class="cab" id="cab" hidden>
+            <div class="cab-hero">
+              <div class="cab-hero__banner" id="cabBanner">
+                <label class="cab-fab cab-fab--banner" title="Сменить баннер (фото или GIF)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.2l1.3-2h6l1.3 2h1.2A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-9Z"/><circle cx="12" cy="13" r="3.3"/></svg>
+                  <input type="file" id="bannerInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                </label>
+              </div>
+              <div class="cab-hero__avatar-wrap">
+                <img class="cab-avatar" id="cabAvatar" src="" alt="avatar">
+                <label class="cab-fab cab-fab--avatar" title="Сменить аватар">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 5.2l3.6 3.6M6 17l-1 3 3-1L18.5 8.5 15.5 5.5 6 17Z"/></svg>
+                  <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                </label>
+              </div>
+            </div>
+
+            <div class="cab-head">
+              <div class="cab-head__nick" id="cabNick"></div>
+              <div class="cab-head__bal"><span id="cabBalance">0</span> ₽</div>
+            </div>
+            <p class="cab-head__bio" id="cabBioView"></p>
+
+            <div class="cab-media-actions">
+              <button class="cab-chip" id="removeBannerBtn" type="button">Убрать баннер</button>
+              <button class="cab-chip" id="removeAvatarBtn" type="button">Убрать аватар</button>
+            </div>
+            <p class="cab-hint">Баннер — фото или GIF (до ~1,5 МБ). Аватар — до ~0,5 МБ.</p>
+
+            <section class="cab-card">
+              <h5>Профиль</h5>
+              <label class="cab-label">Ник
+                <input class="field" id="cabNickInput" type="text" maxlength="24" autocomplete="off">
+              </label>
+              <label class="cab-label">Описание
+                <textarea class="field field--area" id="cabBioInput" rows="4" maxlength="300" placeholder="Расскажи о себе..."></textarea>
+                <span class="cab-count"><span id="cabBioCount">0</span>/300</span>
+              </label>
+              <button class="btn btn--primary btn--sm" id="saveProfileBtn" type="button">Сохранить профиль</button>
+            </section>
+
+            <section class="cab-card" id="cabColorCard" hidden>
+              <h5>Цвет ника <span class="cab-tag">админ</span></h5>
+              <div class="cab-color" id="cabColorSwatches"></div>
+              <div class="cab-color-custom">
+                <input type="color" id="cabColorPicker" value="#ffffff" aria-label="Свой цвет">
+                <button class="cab-chip" id="cabColorApply" type="button">Применить</button>
+                <button class="cab-chip" id="cabColorReset" type="button">Сбросить</button>
+              </div>
+            </section>
+
+            <section class="cab-card">
+              <h5>Пароль</h5>
+              <input class="field" id="oldPass" type="password" placeholder="Старый пароль" autocomplete="current-password">
+              <input class="field" id="newPass" type="password" placeholder="Новый пароль (от 4 символов)" autocomplete="new-password">
+              <button class="btn btn--ghost btn--sm" id="savePassBtn" type="button">Сменить пароль</button>
+            </section>
+
+            <section class="cab-card">
+              <h5>Мои заказы</h5>
+              <div class="cab-list" id="myOrdersList"></div>
+            </section>
+
+            <section class="cab-card">
+              <h5>История баланса</h5>
+              <div class="cab-list" id="txList"></div>
+            </section>
+
+            <section class="cab-card">
+              <h5>Реферальная ссылка</h5>
+              <div class="ref-link">
+                <input class="field" id="refLinkInput" type="text" readonly aria-label="Реферальная ссылка">
+                <button class="cab-chip" id="refCopyBtn" type="button">Копировать</button>
+              </div>
+              <p class="cab-hint" id="refHint"></p>
+            </section>
+
+            <button class="cab-logout" id="mobLogoutBtn" type="button">Выйти из аккаунта</button>
+          </div>
+        </div>
+
+        <!-- меню -->
+        <div class="mob-tab-panel" data-panel="menu">
+          <nav class="mob-nav">
+            <a href="#features" class="mob-nav__link">Возможности</a>
+            <a href="#howto" class="mob-nav__link">Инструкция</a>
+            <a href="#faq" class="mob-nav__link">FAQ</a>
+            <a href="#order-script" class="mob-nav__link">Заказать скрипт</a>
+            <button class="mob-nav__link mob-nav__btn" id="mobSearchBtn" type="button">Поиск игроков</button>
+            <button class="mob-nav__link mob-nav__btn" id="mobComplaintBtn" type="button">Жалоба или идея</button>
+          </nav>
+        </div>
+
+        <!-- скрипты -->
+        <div class="mob-tab-panel" data-panel="scripts">
+          <div class="mob-scripts" id="mobScriptsList">
+            <div class="mob-script-card reveal">
+              <div class="mob-script-card__top">
+                <span class="script__tag">УНИВЕРСАЛ</span>
+                <span class="script__ver">v5.0.3</span>
+              </div>
+              <h4>kawaz1k — Universal</h4>
+              <p>ESP, speed, fly, noclip, anti-AFK</p>
+              <button class="btn-copy btn-copy--block" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"))()'>
+                <span class="btn-copy__idle">Копировать</span>
+                <span class="btn-copy__done">Скопировано</span>
+              </button>
+            </div>
+            <div class="mob-script-card reveal">
+              <div class="mob-script-card__top">
+                <span class="script__tag">FREE</span>
+                <span class="script__ver">v1.0</span>
+              </div>
+              <h4>kawaz1k — Free</h4>
+              <p>Базовый набор функций бесплатно</p>
+              <button class="btn-copy btn-copy--block" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz-free.txt"))()'>
+                <span class="btn-copy__idle">Копировать</span>
+                <span class="btn-copy__done">Скопировано</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- заявка кодера -->
+        <div class="mob-tab-panel" data-panel="coder">
+          <p class="mob-coder-hint">Хочешь помогать проекту? Заполни заявку — мы свяжемся.</p>
+          <button class="btn btn--primary btn--sm" id="openCoderBtn" style="width:100%;margin-top:8px">Открыть заявку</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <h1 class="hero__title">
+          Мощный скрипт<br>
+          для <span class="gradient-text">Roblox</span>
+        </h1>
+        <p class="hero__sub">kawaz1k.win — это скорость, стабильность и полный контроль. Один клик — и ты в игре с лучшими фичами, которые есть на рынке.</p>
+        <div class="hero__actions">
+          <a href="#scripts" class="btn btn--primary">
+            <span>Запустить скрипт</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#howto" class="btn btn--ghost">Как это работает</a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat">
+            <span class="stat__num" data-count="99">0</span>
+            <span class="stat__label">% аптайма</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <div class="terminal">
+          <div class="terminal__bar">
+            <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+            <span class="terminal__title">kawaz1k — исполнитель</span>
+          </div>
+          <div class="terminal__banner" aria-hidden="true">
+            <pre class="ascii"><span class="al">█  █   ███  █   █  ███  █████  ██   █  █ </span>
+<span class="al">█ █   █   █ █   █ █   █    █    █   █ █  </span>
+<span class="al">███   █████ █ █ █ █████   █     █   ███  </span>
+<span class="al">█ █   █   █ █ █ █ █   █  █      █   █ █  </span>
+<span class="al">█  █  █   █  █ █  █   █ █████ █████ █  █ </span></pre>
+          </div>
+          <pre class="terminal__body"><code><span class="c-key">loadstring</span>(<span class="c-str">game:HttpGet</span>(
+  <span class="c-str">"https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"</span>
+))()</code></pre>
+          <div class="terminal__foot">
+            <button class="btn-copy" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"))()'>
+              <span class="btn-copy__idle">Копировать loadstring</span>
+              <span class="btn-copy__done">Скопировано</span>
+            </button>
+          </div>
+        </div>
+        <div class="terminal-shadow"></div>
+      </div>
+    </div>
+
+    <div class="marquee">
+      <div class="marquee__track">
+        <span>BLOX FRUITS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>DOORS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>ARENA TOWER</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>PET SIM 99</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>BROOKHAVEN</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>DEAD RAILS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>GROW A GARDEN</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i>
+        <span>BLOX FRUITS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>DOORS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>ARENA TOWER</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>PET SIM 99</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>BROOKHAVEN</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>DEAD RAILS</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i><span>GROW A GARDEN</span><i class="mq-sep"><svg viewBox="0 0 12 12" width="10" height="10"><polygon class="mq-diamond" points="6,1 11,6 6,11 1,6" fill="currentColor"/></svg></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">// возможности</span>
+        <h2 class="section__title">Всё, что нужно <span class="gradient-text">про-игроку</span></h2>
+        <p class="section__sub">Мы собрали то, что другие раздают по частям — в одном месте и без багов.</p>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <div class="card__icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path class="icon-bolt" d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2Z"/></svg></div>
+          <h3>Мгновенный запуск</h3>
+          <p>Загрузка меньше секунды. Никаких ожиданий и лишних кликов.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5.4c0 4.4-3 8.2-7 9.6-4-1.4-7-5.2-7-9.6V6l7-3Z"/><path d="m8.7 12.2 2.4 2.4 4.4-4.8"/></svg></div>
+          <h3>Анти-детект</h3>
+          <p>Обход защиты и регулярные обновления под патчи Roblox.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><g class="icon-spin"><path d="M20.5 12a8.5 8.5 0 0 1-14.6 5.9"/><path d="M3.5 12A8.5 8.5 0 0 1 18.1 6.1"/></g><path class="icon-arrow" d="M18.4 2.6v3.9h-3.9M5.6 21.4v-3.9h3.9"/></svg></div>
+          <h3>Авто-обновление</h3>
+          <p>Скрипт сам подтягивает свежие версии после каждого патча.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card__icon"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H9L4 19.5V6.5Z"/></svg></div>
+          <h3>Поддержка 24/7</h3>
+          <p>Discord-чат и техподдержка. Отвечаем в среднем за 4 минуты.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCRIPTS ===== -->
+  <section class="section section--alt" id="scripts">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">// скрипты</span>
+        <h2 class="section__title">Доступные <span class="gradient-text">скрипты</span></h2>
+        <p class="section__sub">Все скрипты поддерживаются актуальными версиями.</p>
+      </div>
+      <div class="scripts" id="scriptsList">
+        <!-- Universal -->
+        <article class="script reveal script-card-animated">
+          <div class="script__top">
+            <span class="script__tag">УНИВЕРСАЛ</span>
+            <span class="script__ver">v5.0.3</span>
+          </div>
+          <h3>kawaz1k — Universal</h3>
+          <p>ESP игроков, speed, fly, noclip, anti-AFK и инфинит-джамп — в любой игре.</p>
+          <div class="script__meta"><span>lua 5.1</span><span>● стабильно</span></div>
+          <button class="btn-copy btn-copy--block" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"))()'>
+            <span class="btn-copy__idle">Копировать скрипт</span>
+            <span class="btn-copy__done">Скопировано</span>
+          </button>
+        </article>
+        <!-- Free -->
+        <article class="script reveal script-card-animated" style="animation-delay:.12s">
+          <div class="script__top">
+            <span class="script__tag" style="background:rgba(0,180,255,.15);color:#00b4ff">FREE</span>
+            <span class="script__ver">v1.0</span>
+          </div>
+          <h3>kawaz1k — Free</h3>
+          <p>Базовый набор функций для новичков. Бесплатно без ограничений.</p>
+          <div class="script__meta"><span>lua 5.1</span><span>● стабильно</span></div>
+          <button class="btn-copy btn-copy--block" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz-free.txt"))()'>
+            <span class="btn-copy__idle">Копировать скрипт</span>
+            <span class="btn-copy__done">Скопировано</span>
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW TO ===== -->
+  <section class="section" id="howto">
+    <div class="container">
+      <div class="section__head">
+        <span class="eyebrow">// инструкция</span>
+        <h2 class="section__title">Как <span class="gradient-text">запустить</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><span class="step__num">01</span><h3>Скачай executor</h3><p>Скачай любой executor: Delta, Xeno или Solara.</p></div>
+        <div class="step reveal"><span class="step__num">02</span><h3>Запусти Roblox с executor</h3><p>Открой Roblox через executor.</p></div>
+        <div class="step reveal"><span class="step__num">03</span><h3>Вставь скрипт и играй</h3><p>Нажми «Копировать скрипт», вставь в executor, выполни.</p></div>
+      </div>
+      <div class="cta reveal">
+        <div class="cta__inner">
+          <h3>Готов получить преимущество?</h3>
+          <p>Присоединяйся к сообществу игроков kawaz1k.win</p>
+          <div class="cta__actions">
+            <button class="btn btn--primary" data-copy='loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxhhx671/kawaz1k/refs/heads/main/kawaz1k.lua.txt"))()'>
+              <span class="btn-copy__idle">Копировать скрипт</span>
+              <span class="btn-copy__done">Скопировано</span>
+            </button>
+            <a href="#faq" class="btn btn--ghost">Частые вопросы</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section section--alt" id="faq">
+    <div class="container container--narrow">
+      <div class="section__head">
+        <span class="eyebrow">// вопросы</span>
+        <h2 class="section__title">Частые <span class="gradient-text">вопросы</span></h2>
+      </div>
+      <div class="faq">
+        <details class="faq__item reveal"><summary><span>Это бесплатно?</span><span class="faq__plus"></span></summary><p>Да, базовый набор полностью бесплатный. Pro-функции доступны по желанию.</p></details>
+        <details class="faq__item reveal"><summary><span>Безопасно ли это?</span><span class="faq__plus"></span></summary><p>Скрипт использует обходные механизмы, но использование нарушает правила Roblox — действуй на свой риск.</p></details>
+        <details class="faq__item reveal"><summary><span>Какие executor поддерживаются?</span><span class="faq__plus"></span></summary><p>Совместим с Wave, Swift, Solara и любыми с поддержкой loadstring.</p></details>
+        <details class="faq__item reveal"><summary><span>Что делать, если скрипт не работает?</span><span class="faq__plus"></span></summary><p>Обнови страницу, перезапусти игру и проверь Discord.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ORDER SCRIPT ===== -->
+  <section class="section" id="order-script">
+    <div class="container container--narrow">
+      <div class="section__head">
+        <span class="eyebrow">// заказ скрипта</span>
+        <h2 class="section__title">Заказать <span class="gradient-text">скрипт</span></h2>
+        <p class="section__sub">Стоимость от 15 до 50 ₽. Пополнить баланс можно через администратора.</p>
+      </div>
+      <div class="gate reveal" id="orderGate">
+        <p style="color:var(--c-muted);text-align:center;padding:16px 0">Нужно войти в аккаунт, чтобы заказать скрипт.</p>
+        <button class="btn btn--primary btn--sm" id="orderLoginBtn" style="margin:0 auto;display:block">Войти</button>
+      </div>
+      <form class="order-form reveal" id="orderForm" hidden autocomplete="off">
+        <div class="order-balance-row">
+          <span>Ваш баланс: <b id="orderBalanceNum">0</b> ₽</span>
+        </div>
+        <label class="field-label">Название скрипта / игра
+          <input class="field" id="orderName" type="text" maxlength="80" required placeholder="Например: Auto Farm для Blox Fruits">
+        </label>
+        <label class="field-label">Что должен делать скрипт?
+          <textarea class="field field--area" id="orderDesc" rows="4" required maxlength="500" placeholder="Опиши функции, игру, особые требования..."></textarea>
+        </label>
+        <label class="field-label">Бюджет (15–50 ₽)
+          <input class="field" id="orderBudget" type="number" min="15" max="50" required placeholder="30">
+        </label>
+        <button class="btn btn--primary" type="submit">Отправить заявку</button>
+        <p class="order-note">Оплата списывается с баланса при отправке заявки. Если администратор отклонит заказ — деньги вернутся на баланс автоматически.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== PRIVATE / ADMIN ===== -->
+  <section class="section" id="private">
+    <div class="container container--narrow">
+      <div class="section__head">
+        <span class="eyebrow">// частный вход</span>
+        <h2 class="section__title">Частный <span class="gradient-text">вход</span></h2>
+        <p class="section__sub">Панель администрации: жалобы, новости, скрипты, инвайты, балансы, цвета ников.</p>
+      </div>
+
+      <div class="gate reveal" id="gate">
+        <div class="gate__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path class="lock-body" d="M5.5 10.5h13v10h-13z"/>
+            <path class="lock-shackle" d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/>
+            <path class="lock-key" d="M12 14.5v3"/>
+          </svg>
+        </div>
+        <form class="gate__form" id="gateForm" autocomplete="off">
+          <input class="field gate__input" id="inviteInput" type="password" placeholder="invite-code" aria-label="invite-code">
+          <button class="btn btn--primary btn--sm" type="submit"><span>Войти</span></button>
+        </form>
+        <p class="gate__hint">Доступ только по инвайт-коду</p>
+        <p class="gate__msg" id="gateMsg" role="status"></p>
+      </div>
+
+      <div class="admin" id="admin" hidden>
+        <div class="admin__head">
+          <span class="admin__badge">ADMIN</span>
+          <span class="admin__stat" id="adminStat"></span>
+          <button class="btn btn--ghost btn--sm" id="logoutBtn">Выйти</button>
+        </div>
+
+        <!-- tabs -->
+        <div class="admin-tabs" id="adminTabs">
+          <button class="admin-tab is-active" data-atab="feedback">Жалобы</button>
+          <button class="admin-tab" data-atab="news">Новости</button>
+          <button class="admin-tab" data-atab="scripts">Скрипты</button>
+          <button class="admin-tab" data-atab="invites">Инвайты</button>
+          <button class="admin-tab" data-atab="users">Пользователи</button>
+          <button class="admin-tab" data-atab="orders">Заказы</button>
+          <button class="admin-tab" data-atab="coder-apps">Заявки кодеров</button>
+          <button class="admin-tab" data-atab="chat">Чат</button>
+          <button class="admin-tab" data-atab="journal">Журнал</button>
+        </div>
+
+        <!-- feedback -->
+        <div class="admin-panel is-active" data-apanel="feedback">
+          <h4 class="admin__title">Жалобы и идеи</h4>
+          <div class="fb-list" id="fbList"></div>
+        </div>
+
+        <!-- news -->
+        <div class="admin-panel" data-apanel="news">
+          <h4 class="admin__title">Добавить новость</h4>
+          <form class="news-form" id="newsForm" autocomplete="off">
+            <input class="field" id="nfTitle" type="text" required maxlength="70" placeholder="Заголовок">
+            <input class="field" id="nfDesc" type="text" maxlength="140" placeholder="Описание">
+            <input class="field" id="nfAdded" type="text" maxlength="140" placeholder="Что добавлено">
+            <input class="field" id="nfImproved" type="text" maxlength="140" placeholder="Что улучшено">
+            <button class="btn btn--primary btn--sm" type="submit">Опубликовать</button>
+          </form>
+          <div class="fb-list" id="newsAdminList" style="margin-top:20px"></div>
+        </div>
+
+        <!-- scripts admin -->
+        <div class="admin-panel" data-apanel="scripts">
+          <h4 class="admin__title">Управление скриптами</h4>
+          <form class="news-form" id="addScriptForm" autocomplete="off">
+            <input class="field" id="sfName" type="text" required maxlength="60" placeholder="Название скрипта">
+            <input class="field" id="sfTag" type="text" maxlength="20" placeholder="Тег (УНИВЕРСАЛ, FREE, PRO...)">
+            <input class="field" id="sfVer" type="text" maxlength="12" placeholder="Версия (v1.0)">
+            <input class="field" id="sfDesc" type="text" maxlength="140" placeholder="Описание">
+            <input class="field" id="sfLoadstring" type="text" required maxlength="300" placeholder="loadstring(game:HttpGet(...))()">
+            <button class="btn btn--primary btn--sm" type="submit">Добавить скрипт</button>
+          </form>
+          <div class="fb-list" id="scriptsAdminList" style="margin-top:20px"></div>
+        </div>
+
+        <!-- invites -->
+        <div class="admin-panel" data-apanel="invites">
+          <h4 class="admin__title">Инвайт-коды</h4>
+          <button class="btn btn--primary btn--sm" id="genInviteBtn">Создать инвайт-код</button>
+          <div class="fb-list" id="inviteList" style="margin-top:16px"></div>
+        </div>
+
+        <!-- users -->
+        <div class="admin-panel" data-apanel="users">
+          <h4 class="admin__title">Пользователи</h4>
+          <div class="admin-user-controls" style="display:flex;gap:8px;margin-bottom:12px">
+            <input class="field" id="adminUserSearch" type="text" placeholder="Ник..." style="flex:1">
+            <button class="btn btn--ghost btn--sm" id="adminUserSearchBtn">Найти</button>
+          </div>
+          <div class="fb-list" id="userAdminList"></div>
+        </div>
+
+        <!-- orders -->
+        <div class="admin-panel" data-apanel="orders">
+          <h4 class="admin__title">Заказы скриптов</h4>
+          <div class="fb-list" id="orderAdminList"></div>
+        </div>
+
+        <!-- coder apps -->
+        <div class="admin-panel" data-apanel="coder-apps">
+          <h4 class="admin__title">Заявки кодеров</h4>
+          <div class="fb-list" id="coderAdminList"></div>
+        </div>
+
+        <!-- chat moderation -->
+        <div class="admin-panel" data-apanel="chat">
+          <h4 class="admin__title">Модерация чата</h4>
+          <p class="admin__hint">Сообщения общего чата. Удалённое исчезает у всех сразу.
+            В самом чате работают команды: <code>/ban ник [мин]</code>, <code>/mute ник [мин]</code>,
+            <code>/unban ник</code>, <code>/unmute ник</code>, <code>/kick ник</code>.</p>
+
+          <h4 class="admin__title">Ограничения</h4>
+          <div class="fb-list" id="muteList"></div>
+
+          <h4 class="admin__title" style="margin-top:18px">Сообщения</h4>
+          <div class="fb-list" id="chatAdminList"></div>
+        </div>
+
+        <!-- journal -->
+        <div class="admin-panel" data-apanel="journal">
+          <h4 class="admin__title">Журнал действий</h4>
+          <div class="fb-list" id="modlogList"></div>
+
+          <h4 class="admin__title" style="margin-top:18px">Входы в аккаунты</h4>
+          <div class="fb-list" id="loginsList"></div>
+
+          <h4 class="admin__title" style="margin-top:18px">Бэкапы данных</h4>
+          <div class="backup-row">
+            <button class="btn btn--primary btn--sm" id="makeBackupBtn" type="button">Создать бэкап</button>
+            <span class="backup-hint" id="storageHint"></span>
+          </div>
+          <div class="fb-list" id="backupList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="#" class="logo">
+          <span class="logo__mark">K</span>
+          <span class="logo__text">kawaz1k<span class="accent">.win</span></span>
+        </a>
+        <p>Мощный скрипт-хаб для Roblox. Быстро. Стабильно. Бесплатно.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h3>Сайт</h3>
+          <a href="#features">Возможности</a>
+          <a href="#howto">Инструкция</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer__col">
+          <h3>Сообщество</h3>
+          <a href="#">Discord</a>
+          <a href="#">Telegram</a>
+          <a href="#">YouTube</a>
+        </div>
+        <div class="footer__col">
+          <h3>Правовое</h3>
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <span>© 2026 kawaz1k.win — все права защищены</span>
+      <span class="footer__status"><i></i><span>Все системы работают</span></span>
+    </div>
+    <div class="container footer__disclaimer">
+      <small>Сайт не связан с Roblox Corporation. Использование сторонних скриптов может нарушать правила игры.</small>
+    </div>
+  </footer>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast">Скопировано в буфер обмена</div>
+
+  <!-- ===== MODAL: COMPLAINT ===== -->
+  <div class="modal" id="modalComplaint" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="modal__eyebrow">// обратная связь</span>
+      <h3 class="modal__title">Жалоба или идея</h3>
+      <div class="chips" id="fbChips">
+        <button type="button" class="chip is-active" data-type="problem">Проблема</button>
+        <button type="button" class="chip" data-type="improve">Улучшение</button>
+        <button type="button" class="chip" data-type="add">Что добавить</button>
+      </div>
+      <textarea class="field field--area" id="fbText" rows="5" placeholder="Опиши проблему..."></textarea>
+      <p class="modal__error" id="fbError">Сначала напиши текст</p>
+      <div class="modal__actions">
+        <button class="btn btn--primary btn--sm" id="fbSend" type="button">Отправить</button>
+        <span class="modal__note">Заявку увидит только администрация</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: NEWS ===== -->
+  <div class="modal" id="modalNews" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--news" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="modal__eyebrow">// changelog</span>
+      <h3 class="modal__title">Новости и обновления</h3>
+      <div class="news-list" id="newsList"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: LOGIN ===== -->
+  <div class="modal" id="modalLogin" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--auth" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="modal__eyebrow">// вход</span>
+      <h3 class="modal__title">Войти</h3>
+      <form class="auth-form" id="loginForm" autocomplete="off">
+        <input class="field" id="loginNick" type="text" required maxlength="24" placeholder="Ник">
+        <input class="field" id="loginPass" type="password" required maxlength="64" placeholder="Пароль">
+        <p class="modal__error" id="loginError"></p>
+        <button class="btn btn--primary" type="submit">Войти</button>
+        <p class="auth-switch">Нет аккаунта? <button type="button" class="auth-link" id="toRegBtn">Зарегистрироваться</button></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: REGISTER ===== -->
+  <div class="modal" id="modalReg" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--auth" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="modal__eyebrow">// регистрация</span>
+      <h3 class="modal__title">Создать аккаунт</h3>
+      <form class="auth-form" id="regForm" autocomplete="off">
+        <input class="field" id="regNick" type="text" required maxlength="24" placeholder="Ник">
+        <input class="field" id="regPass" type="password" required maxlength="64" placeholder="Пароль">
+        <input class="field" id="regPassConfirm" type="password" required maxlength="64" placeholder="Подтвердить пароль">
+        <input class="field" id="regInvite" type="text" required maxlength="40" placeholder="Инвайт-код">
+        <input class="field" id="regRef" type="text" maxlength="20" placeholder="Код пригласившего (необязательно)" autocomplete="off">
+        <p class="modal__error" id="regError"></p>
+        <button class="btn btn--primary" type="submit">Зарегистрироваться</button>
+        <p class="auth-switch">Уже есть аккаунт? <button type="button" class="auth-link" id="toLoginBtn">Войти</button></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: ПОИСК ИГРОКОВ ===== -->
+  <div class="modal" id="modalSearch" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--search" role="dialog" aria-modal="true" aria-label="Поиск игроков">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <span class="modal__eyebrow">// сообщество</span>
+      <h3 class="modal__title">Поиск игроков</h3>
+      <div class="sx-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.8-3.8"/></svg>
+        <input id="userSearchInput" type="text" maxlength="32" placeholder="Введи ник..." autocomplete="off" aria-label="Ник игрока">
+        <button class="sx-bar__clear" id="userSearchClear" type="button" aria-label="Очистить" hidden>&times;</button>
+      </div>
+      <div class="sx-grid" id="userResults"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: ПУБЛИЧНЫЙ ПРОФИЛЬ ===== -->
+  <div class="modal" id="modalPublicProfile" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--pub" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="pub-banner" id="pubBanner"></div>
+      <div class="pub-body">
+        <img class="pub-avatar" id="pubAvatar" src="" alt="avatar">
+        <div class="pub-nick" id="pubNick"></div>
+        <div class="pub-since" id="pubSince"></div>
+        <p class="pub-bio" id="pubBio"></p>
+        <div class="pub-stats" id="pubStats"></div>
+        <div class="pub-actions">
+          <button class="btn btn--ghost btn--sm" id="pubShareBtn" type="button">Скопировать ссылку на профиль</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CODER APPLICATION ===== -->
+  <div class="modal" id="modalCoder" aria-hidden="true">
+    <div class="modal__back" data-close></div>
+    <div class="modal__panel modal__panel--coder" role="dialog" aria-modal="true">
+      <button class="modal__close" data-close aria-label="Закрыть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="coder-modal__header">
+        <div class="coder-modal__icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <span class="modal__eyebrow">// набор команды</span>
+        <h3 class="modal__title">Заявка кодера <span class="modal__badge">Beta</span></h3>
+        <p class="modal__sub">Хочешь помогать проекту? Расскажи о себе — мы свяжемся с тобой.</p>
+      </div>
+      <form class="coder-form" id="coderForm" autocomplete="off">
+        <div class="coder-form__step" data-step="1">
+          <div class="coder-step-num">1 / 3</div>
+          <h4>Основная информация</h4>
+          <label class="field-label">Имя *<input class="field" id="cf_name" type="text" required maxlength="40" placeholder="Как к тебе обращаться?"></label>
+          <label class="field-label">Telegram (необязательно)<input class="field" id="cf_tg" type="text" maxlength="40" placeholder="@username"></label>
+          <label class="field-label">Сколько лет? *<input class="field" id="cf_age" type="number" required min="10" max="60" placeholder="17"></label>
+          <button class="btn btn--primary" type="button" onclick="coderNext(1)">Далее →</button>
+        </div>
+        <div class="coder-form__step" data-step="2" hidden>
+          <div class="coder-step-num">2 / 3</div>
+          <h4>Опыт и навыки</h4>
+          <label class="field-label">Чем будешь помогать? *<textarea class="field field--area" id="cf_help" rows="3" required maxlength="300" placeholder="Lua, скрипты, дизайн, тестирование..."></textarea></label>
+          <label class="field-label">Сколько лет в программировании? *<input class="field" id="cf_years" type="number" required min="0" max="30" placeholder="2"></label>
+          <label class="field-label">Другие проекты помимо этого?<textarea class="field field--area" id="cf_projects" rows="3" maxlength="300" placeholder="Расскажи, если были..."></textarea></label>
+          <div class="coder-form__btns">
+            <button class="btn btn--ghost" type="button" onclick="coderPrev(2)">← Назад</button>
+            <button class="btn btn--primary" type="button" onclick="coderNext(2)">Далее →</button>
+          </div>
+        </div>
+        <div class="coder-form__step" data-step="3" hidden>
+          <div class="coder-step-num">3 / 3</div>
+          <h4>Примеры работ</h4>
+          <label class="field-label">Загрузи скрины своих проектов (можно несколько)
+            <input type="file" id="cf_photos" accept="image/*" multiple class="field field--file">
+          </label>
+          <div id="cf_photos_preview" class="coder-photos-preview"></div>
+          <label class="field-label">Пояснения — что это за скрипты/сайты, что они делают?<textarea class="field field--area" id="cf_explain" rows="4" maxlength="500" placeholder="Опиши каждый проект кратко..."></textarea></label>
+          <p class="modal__error" id="coderError"></p>
+          <div class="coder-form__btns">
+            <button class="btn btn--ghost" type="button" onclick="coderPrev(3)">← Назад</button>
+            <button class="btn btn--primary" type="submit">Отправить заявку</button>
+          </div>
+        </div>
+      </form>
+      <div class="coder-success" id="coderSuccess" hidden>
+        <div class="coder-success__icon">✅</div>
+        <h4>Заявка отправлена!</h4>
+        <p>Мы рассмотрим её и свяжемся с тобой в ближайшее время.</p>
+        <button class="btn btn--ghost btn--sm" data-close>Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ЧАТ (общий, по WebSocket) ===== -->
+  <button class="chat-fab" id="chatBtn" type="button" aria-label="Открыть чат" aria-pressed="false">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-2.6-.4L4 21l1.5-4.1A8.2 8.2 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg>
+    <span class="chat-badge" id="chatBadge" hidden>0</span>
+  </button>
+
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Чат">
+    <div class="chat-header">
+      <span class="chat-header-dot" aria-hidden="true"></span>
+      <span class="chat-header-title">Чат</span>
+      <span class="chat-header-online" id="chatOnline">…</span>
+      <span class="chat-header-nick" id="chatNick"></span>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="chat-empty">Сообщений пока нет.<br>Напиши первым 👋</div>
+    </div>
+    <div class="chat-reply" id="chatReplyStrip" hidden>
+      <div class="chat-reply__body">
+        <b id="chatReplyNick"></b>
+        <span id="chatReplyText"></span>
+      </div>
+      <button class="chat-reply__x" id="chatReplyCancel" type="button" aria-label="Отменить ответ">&times;</button>
+    </div>
+    <div class="chat-footer">
+      <textarea class="chat-input" id="chatInput" rows="1" maxlength="400" placeholder="Сообщение…" aria-label="Сообщение"></textarea>
+      <button class="chat-send" id="chatSend" type="button" aria-label="Отправить" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/panel.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/chat.js"></script>
+  <script src="/js/extra.js"></script>
+</body>
+</html>
